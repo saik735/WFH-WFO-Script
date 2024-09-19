@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+        // Define the project type as either 'python' or 'java'
+        PROJECT_TYPE = '' 
+    }
     stages {
         stage('Detect Language') {
             steps {
@@ -24,7 +28,7 @@ pipeline {
                         sh 'pip install -r requirements.txt'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Building Java Maven Project"
-                        sh 'mvn clean install'
+                        sh 'mvn clean compile'
                     } else if (env.PROJECT_TYPE == 'java_gradle') {
                         echo "Building Java Gradle Project"
                         sh 'gradle build'
@@ -53,7 +57,7 @@ pipeline {
                 script {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
-                        // Here, run your Flask app if required, or copy files to your deployment target
+                        // Restart Flask app to apply changes
                         sh 'pkill -f "python3 app.py" || true'
                         sh 'nohup python3 app.py &'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
@@ -63,6 +67,14 @@ pipeline {
                         echo "Deploying Java Gradle Project"
                         sh 'java -jar build/libs/your-java-application.jar'
                     }
+                }
+            }
+        }
+        stage('Save Logs') {
+            steps {
+                script {
+                    // Save the Jenkins build logs in a folder where Flask can access
+                    sh 'cp $WORKSPACE/lastBuild/log /path/where/flask/can/access'
                 }
             }
         }
