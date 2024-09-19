@@ -5,6 +5,7 @@ pipeline {
             steps {
                 // This runs the script and saves the output to output.txt
                 sh 'python3 sadhanaofficeschedule.py > output.txt'
+                //testing for Jenkins pipeline
                 
                 // Archive the output.txt file so you can access it from Jenkins
                 archiveArtifacts artifacts: 'output.txt', allowEmptyArchive: true
