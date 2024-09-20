@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PROJECT_TYPE = ''
+        PROJECT_TYPE = '' // Define the project type as either 'python' or 'java'
     }
     stages {
         stage('Detect Language') {
@@ -59,11 +59,16 @@ pipeline {
                 script {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
+                        // Restart Flask app to apply changes and capture logs
                         sh 'pkill -f "python3 app.py" || true'
                         sh 'nohup python3 app.py > $WORKSPACE/flask_output.log 2>&1 &'
+                        // Confirm log generation
+                        sh 'ls -l $WORKSPACE/flask_output.log'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Deploying Java Maven Project"
                         sh 'java -jar target/your-java-application.jar > $WORKSPACE/java_output.log 2>&1 &'
+                        // Confirm log generation
+                        sh 'ls -l $WORKSPACE/java_output.log'
                     }
                 }
             }
@@ -71,6 +76,7 @@ pipeline {
         stage('Save Logs') {
             steps {
                 script {
+                    // Archive generated log files
                     archiveArtifacts artifacts: '*.log', allowEmptyArchive: true
                 }
             }
@@ -78,9 +84,9 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    echo "Cleaning up workspace"
-                    // You can modify this to not delete the log files
-                    sh 'rm -rf $WORKSPACE/*'
+                    echo "Cleaning up workspace but preserving log files"
+                    // Only remove unnecessary files, not the logs
+                    sh 'rm -rf $WORKSPACE/*.{py,java,xml,gradle,md}'
                 }
             }
         }
