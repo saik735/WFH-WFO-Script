@@ -15,7 +15,7 @@ pipeline {
                     } else if (fileExists('build.gradle')) {
                         env.PROJECT_TYPE = 'java_gradle'
                     } else {
-                        error "Unknown project type. Could not find Python or Java build files."
+                        error "Unknown project type. Could not find Python or Java build files. Ensure that requirements.txt, pom.xml, or build.gradle are present in the repository."
                     }
                 }
             }
@@ -78,5 +78,14 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup') {
+            steps {
+                script {
+                    echo "Cleaning up workspace"
+                    sh 'rm -rf $WORKSPACE/*'
+                }
+            }
+        }
     }
 }
+
