@@ -59,16 +59,12 @@ pipeline {
                 script {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
-                        // Restart Flask app to apply changes and capture logs
+                        // Restart Flask app and capture logs
                         sh 'pkill -f "python3 app.py" || true'
                         sh 'nohup python3 app.py > $WORKSPACE/flask_output.log 2>&1 &'
-                        // Confirm log generation
-                        sh 'ls -l $WORKSPACE/flask_output.log'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Deploying Java Maven Project"
                         sh 'java -jar target/your-java-application.jar > $WORKSPACE/java_output.log 2>&1 &'
-                        // Confirm log generation
-                        sh 'ls -l $WORKSPACE/java_output.log'
                     }
                 }
             }
