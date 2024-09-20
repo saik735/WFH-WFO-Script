@@ -59,15 +59,11 @@ pipeline {
                 script {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
-                        // Restart Flask app and redirect output to a log file
                         sh 'pkill -f "python3 app.py" || true'
                         sh 'nohup python3 app.py > $WORKSPACE/flask_output.log 2>&1 &'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Deploying Java Maven Project"
-                        sh 'java -jar target/your-java-application.jar'
-                    } else if (env.PROJECT_TYPE == 'java_gradle') {
-                        echo "Deploying Java Gradle Project"
-                        sh 'java -jar build/libs/your-java-application.jar'
+                        sh 'java -jar target/your-java-application.jar > $WORKSPACE/java_output.log 2>&1 &'
                     }
                 }
             }
@@ -75,8 +71,7 @@ pipeline {
         stage('Save Logs') {
             steps {
                 script {
-                    // Archive the log files or other artifacts
-                    archiveArtifacts artifacts: 'flask_output.log', allowEmptyArchive: true
+                    archiveArtifacts artifacts: '*.log', allowEmptyArchive: true
                 }
             }
         }
@@ -84,6 +79,7 @@ pipeline {
             steps {
                 script {
                     echo "Cleaning up workspace"
+                    // You can modify this to not delete the log files
                     sh 'rm -rf $WORKSPACE/*'
                 }
             }
