@@ -1,2 +1,11 @@
 # WFH-WFO-Script
-to check if i will work from office or HOME(thu to wed office schedule)
+
+This repository contains scripts to determine whether you will be working from home (WFH) or from the office (WFO) based on an alternating schedule.
+
+## Python Script (`app.py`)
+The Python script calculates the work-from-home or office schedule based on the input date.
+
+### Usage:
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
