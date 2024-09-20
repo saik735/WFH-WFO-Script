@@ -58,8 +58,8 @@ pipeline {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
                         // Restart Flask app to apply changes
-                        sh 'pkill -f "python3 sadhanaofficeschedule.py" || true'
-                        sh 'nohup python3 sadhanaofficeschedule.py &'
+                        sh 'pkill -f "python3 app.py" || true'
+                        sh 'nohup python3 app.py &'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Deploying Java Maven Project"
                         sh 'java -jar target/your-java-application.jar'
