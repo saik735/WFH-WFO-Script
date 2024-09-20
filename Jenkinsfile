@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        // Define the project type as either 'python' or 'java'
-        PROJECT_TYPE = '' 
+        PROJECT_TYPE = ''
     }
     stages {
         stage('Detect Language') {
@@ -60,9 +59,9 @@ pipeline {
                 script {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
-                        // Restart Flask app to apply changes
+                        // Restart Flask app and redirect output to a log file
                         sh 'pkill -f "python3 app.py" || true'
-                        sh 'nohup python3 app.py &'
+                        sh 'nohup python3 app.py > $WORKSPACE/flask_output.log 2>&1 &'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Deploying Java Maven Project"
                         sh 'java -jar target/your-java-application.jar'
@@ -76,8 +75,8 @@ pipeline {
         stage('Save Logs') {
             steps {
                 script {
-                    // Save the Jenkins build logs using $BUILD_NUMBER or another appropriate path
-                    sh 'cp $WORKSPACE/log $WORKSPACE/build-$BUILD_NUMBER.log'
+                    // Archive the log files or other artifacts
+                    archiveArtifacts artifacts: 'flask_output.log', allowEmptyArchive: true
                 }
             }
         }
