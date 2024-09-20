@@ -9,13 +9,16 @@ pipeline {
             steps {
                 script {
                     if (fileExists('requirements.txt')) {
+                        echo "Python project detected"
                         env.PROJECT_TYPE = 'python'
                     } else if (fileExists('pom.xml')) {
+                        echo "Java Maven project detected"
                         env.PROJECT_TYPE = 'java_maven'
                     } else if (fileExists('build.gradle')) {
+                        echo "Java Gradle project detected"
                         env.PROJECT_TYPE = 'java_gradle'
                     } else {
-                        error "Unknown project type. Could not find Python or Java build files. Ensure that requirements.txt, pom.xml, or build.gradle are present in the repository."
+                        error "Unknown project type. Could not find Python or Java build files."
                     }
                 }
             }
@@ -73,8 +76,8 @@ pipeline {
         stage('Save Logs') {
             steps {
                 script {
-                    // Save the Jenkins build logs in a folder where Flask can access
-                    sh 'cp $WORKSPACE/lastBuild/log /path/where/flask/can/access'
+                    // Save the Jenkins build logs using $BUILD_NUMBER or another appropriate path
+                    sh 'cp $WORKSPACE/log $WORKSPACE/build-$BUILD_NUMBER.log'
                 }
             }
         }
@@ -88,4 +91,3 @@ pipeline {
         }
     }
 }
-
