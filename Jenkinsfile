@@ -15,7 +15,7 @@ pipeline {
                     } else if (fileExists('build.gradle')) {
                         env.PROJECT_TYPE = 'java_gradle'
                     } else {
-                        error "Unknown project type. Could not find Python or Java build files."
+                        error "Unknown project type. Could not find Python or Java build files. Ensure that requirements.txt, pom.xml, or build.gradle are present in the repository."
                     }
                 }
             }
@@ -58,8 +58,8 @@ pipeline {
                     if (env.PROJECT_TYPE == 'python') {
                         echo "Deploying Python Project"
                         // Restart Flask app to apply changes
-                        sh 'pkill -f "python3 app.py" || true'
-                        sh 'nohup python3 app.py &'
+                        sh 'pkill -f "python3 sadhanaofficeschedule.py" || true'
+                        sh 'nohup python3 sadhanaofficeschedule.py &'
                     } else if (env.PROJECT_TYPE == 'java_maven') {
                         echo "Deploying Java Maven Project"
                         sh 'java -jar target/your-java-application.jar'
@@ -78,5 +78,14 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup') {
+            steps {
+                script {
+                    echo "Cleaning up workspace"
+                    sh 'rm -rf $WORKSPACE/*'
+                }
+            }
+        }
     }
 }
+
