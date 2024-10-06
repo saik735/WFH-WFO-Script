@@ -7,7 +7,8 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 retry(3) {
-                git 'https://github.com/saik735/WFH-WFO-Script.git', branch: 'main'
+                    git branch: 'main', url: 'https://github.com/saik735/WFH-WFO-Script.git'
+                }
             }
         }
 
@@ -16,8 +17,11 @@ pipeline {
                 script {
                     echo "Setting up Python environment for version 1.0"
                     // Create virtual environment and install dependencies
-                    sh 'python3 -m venv venv'
-                    sh 'source venv/bin/activate && pip install -r requirements.txt'
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install -r requirements.txt
+                    '''
                 }
             }
         }
@@ -27,8 +31,10 @@ pipeline {
                 script {
                     echo "Deploying Python Flask Project version 1.0"
                     // Kill any existing Flask process and start the app
-                    sh 'pkill -f "python3 app.py" || true'
-                    sh 'nohup python3 app.py > $WORKSPACE/flask_output.log 2>&1 &'
+                    sh '''
+                        pkill -f "python3 app.py" || true
+                        nohup python3 app.py > $WORKSPACE/flask_output.log 2>&1 &
+                    '''
                 }
             }
         }
