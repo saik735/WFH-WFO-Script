@@ -6,7 +6,8 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/saik735/WFH-WFO-Script.git'
+                retry(3) {
+                git 'https://github.com/saik735/WFH-WFO-Script.git', branch: 'main'
             }
         }
 
