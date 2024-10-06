@@ -9,20 +9,24 @@
 <body>
     <h1>Check Work From Home Status</h1>
     
-   <!-- Search form to select a date -->
-    <form action="/check-status-ui" method="get">
+    <form id="statusForm" action="/check-status" method="GET">
         <label for="date">Select Date:</label>
-        <input type="date" id="date" name="date" required>
+        <input type="text" id="date" name="date" placeholder="YYYY-MM-DD" required>
         <button type="submit">Check Status</button>
     </form>
 
-    <!-- Display the work status -->
     {% if work_status %}
-        <h2>Work Status for {{ date }}:</h2>
-        <p>{{ work_status }}</p>
-    {% else %}
-        <p>Please select a date to check the status.</p>
+    <h2>On {{ date }}, she is working: {{ work_status }}</h2>
     {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Initialize the date picker
+        flatpickr("#date", {
+            dateFormat: "Y-m-d",
+            defaultDate: new Date()
+        });
+    </script>
 </body>
 </html>
 
