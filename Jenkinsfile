@@ -16,11 +16,11 @@ pipeline {
             steps {
                 script {
                     echo "Setting up Python environment for version 1.0"
-                    // Create virtual environment and install dependencies
+                    // Create virtual environment and install dependencies with --break-system-packages
                     sh '''
                         python3 -m venv venv
                         . venv/bin/activate
-                        pip install -r requirements.txt
+                        pip install -r requirements.txt --break-system-packages
                     '''
                 }
             }
